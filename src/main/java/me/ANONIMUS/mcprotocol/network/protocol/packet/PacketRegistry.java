@@ -69,4 +69,14 @@ public class PacketRegistry {
 
         return null;
     }
+
+    public static int getPacketsSize() {
+        int i = 0;
+        for (PacketDirection direction : PacketDirection.values()) {
+            for (ConnectionState connectionState : ConnectionState.values()) {
+                i += connectionState.getPacketsByDirection(direction).size();
+            }
+        }
+        return i;
+    }
 }

@@ -7,10 +7,10 @@ import java.net.Socket;
 import java.util.Hashtable;
 
 public class ConnectionUtils {
-    public static boolean hasConnectionError(String host, int port, int timeout) {
+    public static boolean hasConnectionError(String host, int port) {
         try {
             final Socket socket = new Socket();
-            socket.connect(new InetSocketAddress(host, port), timeout);
+            socket.connect(new InetSocketAddress(host, port), 500);
             socket.close();
             return false;
         } catch (Exception e) {

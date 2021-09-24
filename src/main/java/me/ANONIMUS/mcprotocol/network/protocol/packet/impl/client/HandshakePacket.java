@@ -26,7 +26,7 @@ public class HandshakePacket extends Packet {
         out.writeVarInt(this.protocolId);
         out.writeString(this.host);
         out.writeShort(this.port);
-        out.writeVarInt(this.intent.getId());
+        out.writeVarInt(this.intent.ordinal() + 1);
     }
 
     @Override
@@ -34,6 +34,6 @@ public class HandshakePacket extends Packet {
         this.protocolId = in.readVarInt();
         this.host = in.readString();
         this.port = in.readShort();
-        this.intent = HandshakeIntent.getById(in.readVarInt());
+        this.intent = HandshakeIntent.values()[in.readVarInt() - 1];
     }
 }

@@ -22,13 +22,21 @@ public class ServerLoginSuccessPacket extends Packet {
 
     @Override
     public void write(PacketBuffer out, int protocol) {
-        out.writeString(this.uuid == null ? "" : this.uuid.toString());
+        if(protocol >= 735) {
+            out.writeUuid(this.uuid);
+        } else {
+            out.writeString(this.uuid == null ? "" : this.uuid.toString());
+        }
         out.writeString(this.username);
     }
 
     @Override
     public void read(PacketBuffer in, int protocol) {
-        this.uuid = UUID.fromString(in.readString());
+        if(protocol >= 735) {
+            this.uuid = in.readUuid();
+        } else {
+            this.uuid = UUID.fromString(in.readString());
+        }
         this.username = in.readString();
     }
 

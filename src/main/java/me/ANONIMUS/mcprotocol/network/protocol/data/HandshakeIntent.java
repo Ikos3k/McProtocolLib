@@ -1,16 +1,7 @@
 package me.ANONIMUS.mcprotocol.network.protocol.data;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-import java.util.Arrays;
-
-@Getter
-@AllArgsConstructor
 public enum HandshakeIntent {
-    STATUS(1), LOGIN(2);
-
-    private final int id;
+    STATUS, LOGIN;
 
     public ConnectionState getConnectionState() {
         switch (this) {
@@ -21,9 +12,5 @@ public enum HandshakeIntent {
             default:
                 return null;
         }
-    }
-
-    public static HandshakeIntent getById(int id) {
-        return Arrays.stream(values()).filter(v -> v.id == id).findFirst().orElse(STATUS);
     }
 }

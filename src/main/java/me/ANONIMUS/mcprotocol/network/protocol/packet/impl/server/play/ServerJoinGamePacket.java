@@ -28,13 +28,13 @@ public class ServerJoinGamePacket extends Packet {
     @Override
     public void write(PacketBuffer out, int protocol) {
         out.writeInt(this.entityId);
-        out.writeByte(this.gamemode.getId());
+        out.writeGameMode(this.gamemode);
         if (protocol >= 108) {
-            out.writeInt(this.dimension.getId());
+            out.writeInt(this.dimension.ordinal() - 1);
         } else {
-            out.writeByte(this.dimension.getId());
+            out.writeByte(this.dimension.ordinal() - 1);
         }
-        out.writeByte(this.difficulty.getId());
+        out.writeByte(this.difficulty.ordinal());
         out.writeByte(this.maxPlayers);
         out.writeString(this.levelType);
         out.writeBoolean(this.reduced_debug);
@@ -43,13 +43,13 @@ public class ServerJoinGamePacket extends Packet {
     @Override
     public void read(PacketBuffer in, int protocol) {
         this.entityId = in.readInt();
-        this.gamemode = Gamemode.getById(in.readUnsignedByte());
+        this.gamemode = in.readGameMode();
         if (protocol >= 108) {
-            this.dimension = Dimension.getById(in.readInt());
+            this.dimension = Dimension.values()[in.readInt() + 1];
         } else {
-            this.dimension = Dimension.getById(in.readByte());
+            this.dimension = Dimension.values()[in.readByte() + 1];
         }
-        this.difficulty = Difficulty.getById(in.readUnsignedByte());
+        this.difficulty = Difficulty.values()[in.readUnsignedByte()];
         this.maxPlayers = in.readUnsignedByte();
         this.levelType = in.readString(16);
 

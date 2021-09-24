@@ -17,8 +17,8 @@ public class KeepAliveThread extends Thread {
     public void run() {
         while (true) {
             sessions.stream()
-                    .filter(session -> session.getConnectionState() == ConnectionState.PLAY)
-                    .forEach(session -> session.sendPacket(new ServerKeepAlivePacket((int) System.currentTimeMillis())));
+                .filter(session -> session.getConnectionState() == ConnectionState.PLAY)
+                .forEach(session -> session.sendPacket(new ServerKeepAlivePacket((int) System.currentTimeMillis())));
 
             sleep(3000);
         }

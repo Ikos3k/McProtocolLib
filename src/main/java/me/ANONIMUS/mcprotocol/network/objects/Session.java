@@ -55,6 +55,7 @@ public class Session {
         if (handler != null) {
             handler.disconnect();
         }
+
         if (channel != null) {
             channel.close();
         }
@@ -63,6 +64,6 @@ public class Session {
     @Override
     public String toString() {
         return "channel: " + channel.remoteAddress()
-                + " profile: " + (gameProfile != null ? gameProfile : "null");
+            + " profile: " + (gameProfile != null ? gameProfile : "null");
     }
 }

@@ -4,16 +4,35 @@ import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.DecoderException;
 import io.netty.handler.codec.EncoderException;
 import lombok.AllArgsConstructor;
+import me.ANONIMUS.mcprotocol.network.protocol.data.Gamemode;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.apache.commons.codec.Charsets;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 @AllArgsConstructor
 public class PacketBuffer {
     private final ByteBuf byteBuf;
+
+    public void writeGameMode(Gamemode gamemode) {
+        if(gamemode.ordinal() == 4) {
+            this.writeByte(8);
+        } else {
+            this.writeByte(gamemode.ordinal());
+        }
+    }
+
+    public Gamemode readGameMode() {
+        int gamedId = this.readUnsignedByte();
+        if(gamedId == 8) {
+            return Gamemode.values()[4];
+        } else {
+            return Gamemode.values()[gamedId];
+        }
+    }
 
     public byte[] readByteArray(int length) {
         byte[] bytes = new byte[length];
@@ -107,6 +126,15 @@ public class PacketBuffer {
 
         this.writeVarInt(abyte.length);
         this.writeBytes(abyte);
+    }
+
+    public void writeUuid(UUID uuid) {
+        this.writeLong(uuid.getMostSignificantBits());
+        this.writeLong(uuid.getLeastSignificantBits());
+    }
+
+    public UUID readUuid() {
+        return new UUID(this.readLong(), this.readLong());
     }
 
     public int readableBytes() {

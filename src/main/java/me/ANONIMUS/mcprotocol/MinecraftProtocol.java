@@ -1,8 +1,6 @@
 package me.ANONIMUS.mcprotocol;
 
 import me.ANONIMUS.mcprotocol.network.protocol.ProtocolType;
-import me.ANONIMUS.mcprotocol.network.protocol.data.ConnectionState;
-import me.ANONIMUS.mcprotocol.network.protocol.packet.PacketDirection;
 import me.ANONIMUS.mcprotocol.network.protocol.packet.PacketRegistry;
 import me.ANONIMUS.mcprotocol.utils.ColorUtil;
 
@@ -18,18 +16,10 @@ public class MinecraftProtocol {
         System.out.println();
         PacketRegistry.init();
 
-        System.out.println(ColorUtil.ANSI_BRIGHT_YELLOW + "Supported versions: " + ColorUtil.ANSI_BRIGHT_WHITE + Arrays.stream(ProtocolType.values()).filter(protocolType ->
-                protocolType != ProtocolType.PROTOCOL_UNKNOWN).map(ProtocolType::getPrefix).collect(Collectors.joining(ColorUtil.ANSI_BRIGHT_RED + ", " + ColorUtil.ANSI_BRIGHT_WHITE)));
-        System.out.println(ColorUtil.ANSI_BRIGHT_YELLOW + "Successfully loaded: " + ColorUtil.ANSI_BRIGHT_WHITE + getPacketsSize() + ColorUtil.ANSI_BRIGHT_YELLOW + " packets" + ColorUtil.ANSI_RESET);
-    }
+        System.out.println(ColorUtil.ANSI_BRIGHT_YELLOW + "Supported versions: " + ColorUtil.ANSI_BRIGHT_WHITE + Arrays.stream(ProtocolType.values())
+            .filter(protocolType -> protocolType != ProtocolType.PROTOCOL_UNKNOWN).map(ProtocolType::getPrefix)
+            .collect(Collectors.joining(ColorUtil.ANSI_BRIGHT_RED + ", " + ColorUtil.ANSI_BRIGHT_WHITE)));
 
-    private static int getPacketsSize() {
-        int i = 0;
-        for (PacketDirection direction : PacketDirection.values()) {
-            for (ConnectionState connectionState : ConnectionState.values()) {
-                i += connectionState.getPacketsByDirection(direction).size();
-            }
-        }
-        return i;
+        System.out.println(ColorUtil.ANSI_BRIGHT_YELLOW + "Successfully loaded: " + ColorUtil.ANSI_BRIGHT_WHITE + PacketRegistry.getPacketsSize() + ColorUtil.ANSI_BRIGHT_YELLOW + " packets" + ColorUtil.ANSI_RESET);
     }
 }

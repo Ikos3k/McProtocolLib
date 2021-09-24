@@ -70,8 +70,6 @@ public class MinecraftServer {
 
                             @Override
                             public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-                                super.exceptionCaught(ctx, cause);
-
                                 cause.printStackTrace();
                             }
 
@@ -96,6 +94,11 @@ public class MinecraftServer {
                             protected void channelRead0(ChannelHandlerContext ctx, Packet packet) {
                                 if (packet instanceof HandshakePacket) {
                                     final HandshakePacket handshake = (HandshakePacket) packet;
+                                    if(!ProtocolType.isSupported(handshake.getProtocolId())) {
+                                        session.disconnect();
+                                        return;
+                                    }
+
                                     session.setConnectionState(handshake.getIntent().getConnectionState());
                                     session.setHandler(handlers.get(handshake.getIntent()));
 
@@ -104,19 +107,13 @@ public class MinecraftServer {
                                         if (keepaliveTask) {
                                             keepAliveThread.update(sessions);
                                         }
-
-                                        for (ProtocolType protocol : ProtocolType.values()) {
-                                            if (handshake.getProtocolId() == protocol.getProtocol()) {
-                                                return;
-                                            }
-                                        }
-
-                                        session.getChannel().close();
                                     }
                                 } else {
-                                    if (!(packet instanceof ClientKeepAlivePacket)) {
-                                        session.getHandler().handlePacket(session, packet);
+                                    if (packet instanceof ClientKeepAlivePacket) {
+                                        return;
                                     }
+
+                                    session.getHandler().handlePacket(session, packet);
                                 }
 
                                 listener.packetReceived(session, packet);
@@ -148,11 +145,12 @@ public class MinecraftServer {
     }
 
     public void close() {
+        listener.serverClosed();
+
         sessions.forEach(Session::disconnect);
         sessions.clear();
 
         keepAliveThread.stop();
         group.shutdownGracefully();
-        listener.serverClosed();
     }
 }

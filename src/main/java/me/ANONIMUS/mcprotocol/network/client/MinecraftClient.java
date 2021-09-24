@@ -7,7 +7,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import lombok.Data;
-import me.ANONIMUS.mcprotocol.exception.BetterException;
 import me.ANONIMUS.mcprotocol.network.objects.Session;
 import me.ANONIMUS.mcprotocol.network.protocol.ProtocolType;
 import me.ANONIMUS.mcprotocol.network.protocol.data.ConnectionState;
@@ -31,11 +30,10 @@ import java.util.concurrent.TimeUnit;
 @Data
 public class MinecraftClient {
     private final ConnectionState connectionState;
-    private final int protocol;
+    private ClientListener listener;
     private Session remoteSession;
     private EventLoopGroup group;
-
-    private ClientListener listener;
+    private final int protocol;
 
     public MinecraftClient(final ConnectionState connectionState, final ProtocolType protocolType) {
         this.connectionState = connectionState;
@@ -87,7 +85,7 @@ public class MinecraftClient {
 
                             @Override
                             public void channelInactive(ChannelHandlerContext ctx) {
-                                remoteSession.disconnect();
+                                disconnect(null, ctx.disconnect().cause());
                             }
 
                             @Override
@@ -121,13 +119,12 @@ public class MinecraftClient {
     }
 
     public void disconnect(String cause, Throwable throwable) {
+        listener.disconnected(remoteSession, cause, throwable);
+
         if (remoteSession != null) {
             remoteSession.disconnect();
         }
+
         group.shutdownGracefully();
-
-        listener.disconnected(remoteSession, cause, throwable);
-
-        throw new BetterException(cause);
     }
 }

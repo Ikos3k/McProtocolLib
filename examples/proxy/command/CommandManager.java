@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandManager {
-    private static List<Command> commandList = new ArrayList<>();
+    private static final List<Command> commandList = new ArrayList<>();
 
     public static void init() {
         commandList.add(new Command("test") {

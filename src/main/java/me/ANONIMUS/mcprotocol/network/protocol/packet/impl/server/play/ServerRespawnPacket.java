@@ -24,17 +24,17 @@ public class ServerRespawnPacket extends Packet {
 
     @Override
     public void write(PacketBuffer out, int protocol) {
-        out.writeInt(this.dimension.getId());
-        out.writeByte(this.difficulty.getId());
-        out.writeByte(this.gamemode.getId());
+        out.writeInt(this.dimension.ordinal() - 1);
+        out.writeByte(this.difficulty.ordinal());
+        out.writeGameMode(this.gamemode);
         out.writeString(this.level_type);
     }
 
     @Override
     public void read(PacketBuffer in, int protocol) {
-        this.dimension = Dimension.getById(in.readInt());
-        this.difficulty = Difficulty.getById(in.readUnsignedByte());
-        this.gamemode = Gamemode.getById(in.readUnsignedByte());
+        this.dimension = Dimension.values()[in.readInt() + 1];
+        this.difficulty = Difficulty.values()[in.readUnsignedByte()];
+        this.gamemode = in.readGameMode();
         this.level_type = in.readString(16);
     }
 

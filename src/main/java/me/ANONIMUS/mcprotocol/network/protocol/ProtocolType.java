@@ -24,6 +24,8 @@ public enum ProtocolType {
    /*
         NOT TESTED (ONLY MOTD WORKING)
 
+        PROTOCOL_1_17_1(756, "1.17.1"),
+        PROTOCOL_1_17(755, "1.17"),
         PROTOCOL_1_16_4(754, "1.16.4"),
         PROTOCOL_1_16_3(753, "1.16.3"),
         PROTOCOL_1_16_2(751, "1.16.2"),
@@ -52,6 +54,10 @@ public enum ProtocolType {
 
     private final int protocol;
     private final String prefix;
+
+    public static boolean isSupported(int protocol) {
+        return getByProtocolID(protocol) != PROTOCOL_UNKNOWN;
+    }
 
     public static ProtocolType getByProtocolID(int protocol) {
         return Arrays.stream(values()).filter(v -> v.protocol == protocol).findFirst().orElse(PROTOCOL_UNKNOWN);

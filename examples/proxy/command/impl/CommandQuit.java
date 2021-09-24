@@ -15,7 +15,7 @@ public class CommandQuit extends Command {
         player.getRemoteSession().disconnect();
         player.setRemoteSession(null);
         player.setConnectedType(Player.ConnectedType.DISCONNECTED);
-        ChatUtil.sendChatMessage("rozlaczono", player.getSession(), true);
+        ChatUtil.sendChatMessage("disconnected", player.getSession(), true);
         WorldUtil.emptyWorld(player.getSession());
     }
 }

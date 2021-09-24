@@ -39,7 +39,7 @@ public class ServerStatusHandler extends ServerHandler {
                 size = 0;
             }
             PlayerInfo playerInfo = new PlayerInfo(size, 0, gp);
-            BaseComponent[] desc = new ComponentBuilder("EXAMPLE MOTD&r\nEXAMPLE MOTD").create();
+            BaseComponent[] desc = new ComponentBuilder("EXAMPLE MOTD\nEXAMPLE MOTD").create();
 
             session.sendPacket(new ServerStatusResponsePacket(new ServerStatusInfo(versionInfo, playerInfo, desc, null)));
             session.sendPacket(new ServerStatusPongPacket(0));

@@ -33,11 +33,11 @@ public class CommandJoin extends Command {
             port = Integer.parseInt(split[1]);
         }
 
-        if (ConnectionUtils.hasConnectionError(ip, port, 500)) {
+        if (ConnectionUtils.hasConnectionError(ip, port)) {
             final String[] resolved = ConnectionUtils.getServerAddress(ip);
             ip = resolved[0];
             port = Integer.parseInt(resolved[1]);
-            if (ConnectionUtils.hasConnectionError(ip, port, 500)) {
+            if (ConnectionUtils.hasConnectionError(ip, port)) {
                 ChatUtil.sendChatMessage("&cThe server has a connection problem or is down!", player.getSession(), true);
                 return;
             }
@@ -56,6 +56,7 @@ public class CommandJoin extends Command {
             @Override
             public void disconnected(Session session, String reason, Throwable cause) {
                 player.setConnectedType(Player.ConnectedType.DISCONNECTED);
+                System.out.println("disconnected from server " + session.getServerData().getHost());
             }
 
             @Override
